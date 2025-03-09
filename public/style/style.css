@@ -1,0 +1,67 @@
+#canvases-container {
+    display: flex;
+    overflow-y: scroll;
+    justify-content: start;
+    align-items: last baseline;
+    gap: 10px;
+}
+
+#canvases {
+    display: flex;
+    justify-content: start;
+    align-items: last baseline;
+    gap: 10px;
+}
+
+.canvas {
+    border: 2px solid #000000;
+    border-collapse: collapse;
+    margin: 0 auto;
+}
+
+.canvas .canvas-cell {
+    font-size: 20px;
+    width: 1.5ch;
+    height: 1.25em;
+    padding: 0;
+    border: 1px solid #cfcfcf;
+    font-family: Inconsolata;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.canvas-controls {
+    margin: 5px;
+    gap: 5px;
+    display: flex;
+    justify-content: center;
+}
+
+button {
+    cursor: pointer;
+    background: none;
+    padding: 5px;
+}
+
+.canvas-controls button.disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.canvas-controls button.disabled:hover {
+    background: none;
+}
+
+@keyframes blink {
+    0%,
+    100% {
+        outline: none;
+    }
+    50% {
+        outline: 2px solid #51515140;
+    }
+}
+
+.canvas-cell.selected {
+    animation: blink 1s steps(1, start) infinite;
+}

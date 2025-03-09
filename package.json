@@ -1,0 +1,25 @@
+{
+    "name": "assignment5",
+    "version": "1.0.0",
+    "main": "assignment5.js",
+    "scripts": {
+        "start": "nodemon assignment5.js",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/ShivaunBartoo/ASCIImator.git"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/ShivaunBartoo/ASCIImator/issues"
+    },
+    "homepage": "https://github.com/ShivaunBartoo/ASCIImator#readme",
+    "description": "",
+    "dependencies": {
+        "express": "^4.21.2",
+        "nodemon": "^3.1.9"
+    }
+}
