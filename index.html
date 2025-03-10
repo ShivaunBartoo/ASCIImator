@@ -18,9 +18,37 @@
         />
     </head>
     <body>
-        <div id="canvases-container">
-            <div id="canvases"></div>
-            <button class="add-button"><span class="material-icons">add</span></button>
-        </div>
+        <main>
+            <nav>
+                <span>ASCIImator</span>
+                <div class="dropdown">
+                    <button class="dropdown-button">Save</button>
+                    <div id="save-content" class="dropdown-content">
+                        <button class="save-to-server">To Server</button>
+                        <!-- <button class="save-to-disk">To Disk</button> -->
+                    </div>
+                </div>
+                <div class="dropdown">
+                    <button class="dropdown-button">Load</button>
+                    <div id="load-content" class="dropdown-content">
+                        <!-- <button class="load-from-server">From Server</button> -->
+                        <!-- <button class="load-from-disk">From Disk</button> -->
+                    </div>
+                </div>
+                <div class="range-container">
+                    <label for="fps">FPS:</label>
+                    <input id="fps" name="fps" type="range" min="1" max="48" value="6" />
+                    <span id="fps-value"></span>
+                </div>
+            </nav>
+            <div id="anim-canvas-container">
+                <div class="canvas" id="anim-canvas"></div>
+            </div>
+
+            <div id="canvases-container">
+                <div id="canvases"></div>
+                <button class="add-button"><span class="material-icons">add</span></button>
+            </div>
+        </main>
     </body>
 </html>

@@ -1,11 +1,17 @@
-let selectedCell = null; // Static variable to store the currently selected cell
-let globalListenersAdded = false; // Flag to track if global event listeners have been added
+const cellWidthMult = 1.75;
+const cellHeightMult = 1.25;
 
+/**
+ * Represents a canvas element that allows for interactive cell selection and content manipulation.
+ * Provides methods to convert the canvas content to string or JSON, load content from JSON,
+ * and handle user interactions such as cell selection and keyboard input.
+ */
 export class Canvas {
-    constructor(element, width, height) {
+    constructor(element, width, height, scale = 1) {
         this.element = element;
         this.width = width;
         this.height = height;
+        this.scale = scale;
         this.initCanvas();
     }
 
@@ -42,6 +48,9 @@ export class Canvas {
      * @param {Object} json - JSON object representing the canvas content
      */
     fromJSON(json) {
+        if (!this.JSONisValid(json)) {
+            throw new Error("Invalid JSON format");
+        }
         this.width = json.width;
         this.height = json.height;
         this.initCanvas();
@@ -49,45 +58,48 @@ export class Canvas {
         for (let i = 0; i < cells.length; i++) {
             cells[i].textContent = json.cells[i];
         }
+        this.dispatchCanvasUpdatedEvent();
     }
 
     /**
-     * Initializes the canvas by creating the HTML structure and adding event listeners
+     * Validates the structure of a JSON object for the canvas
+     * @param {Object} json - JSON object to validate
+     * @returns {boolean} True if the JSON object is valid, false otherwise
+     */
+    JSONisValid(json) {
+        if (typeof json !== "object" || json === null) {
+            return false;
+        }
+        if (typeof json.width !== "number" || json.width <= 0) {
+            return false;
+        }
+        if (typeof json.height !== "number" || json.height <= 0) {
+            return false;
+        }
+        if (!Array.isArray(json.cells) || json.cells.length !== json.width * json.height) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Initializes the canvas by creating the HTML structure and injecting CSS styles
      */
     initCanvas() {
-        this.element.innerHTML = this.#getCanvasHTML();
-        this.element.querySelectorAll(".canvas-cell").forEach((cell) => {
-            cell.addEventListener("click", (event) => {
-                event.stopPropagation(); // Prevent the click event from bubbling up to the document
-                this.#selectCell(cell);
-            });
-        });
-
-        if (!globalListenersAdded) {
-            // Add event listener for keydown events
-            document.addEventListener("keydown", this.#handleKeyDown.bind(this));
-            // Add event listener for clicks outside the canvas to deselect the current cell
-            document.addEventListener("click", (event) => {
-                if (selectedCell) {
-                    selectedCell.classList.remove("selected");
-                    selectedCell = null;
-                }
-            });
-            // Set the flag to true to indicate that global listeners have been added
-            globalListenersAdded = true;
-        }
+        this.element.innerHTML = this.getCanvasHTML();
+        this.styleCanvasSize();
     }
 
     /**
      * Generates the HTML structure for the canvas
      * @returns {string} HTML string representing the canvas structure
      */
-    #getCanvasHTML() {
+    getCanvasHTML() {
         let html = `<table class='canvas'>`;
         for (let i = 0; i < this.height; i++) {
             html += "<tr>";
             for (let j = 0; j < this.width; j++) {
-                html += `<td class="canvas-cell" data-x="${j}" data-y="${i}"> </td>`;
+                html += `<td class="canvas-cell" data-x="${j}" data-y="${i}" style="width: ${cellWidthMult}ch; height: ${cellHeightMult}em;"> </td>`;
             }
             html += "</tr>";
         }
@@ -95,70 +107,14 @@ export class Canvas {
         return html;
     }
 
-    /**
-     * Selects a canvas cell and updates the selectedCell variable
-     * @param {Element} cell - The cell element to select
-     */
-    #selectCell(cell) {
-        if (selectedCell) {
-            selectedCell.classList.remove("selected");
-        }
-        selectedCell = cell;
-        selectedCell.classList.add("selected");
-    }
 
     /**
-     * Handles keydown events to update the content of the selected cell
-     * @param {Event} event - The keydown event
-     */
-    #handleKeyDown(event) {
-        if (event.key.length === 1) {
-            if (selectedCell) {
-                selectedCell.textContent = event.key;
-            }
-        }
-        if (
-            event.key === "ArrowUp" ||
-            event.key === "ArrowDown" ||
-            event.key === "ArrowLeft" ||
-            event.key === "ArrowRight"
-        ) {
-            this.#moveSelection(event.key);
-        }
-    }
-
-    /**
-     * Moves the selection to an adjacent cell based on the direction
-     * @param {string} direction - The direction to move the selection ("ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight")
-     */
-    #moveSelection(direction) {
-        if (!selectedCell) return;
-
-        let x = parseInt(selectedCell.getAttribute("data-x"));
-        let y = parseInt(selectedCell.getAttribute("data-y"));
-
-        switch (direction) {
-            case "ArrowUp":
-                if (y > 0) y--;
-                break;
-            case "ArrowDown":
-                if (y < selectedCell.parentElement.parentElement.children.length - 1) y++;
-                break;
-            case "ArrowLeft":
-                if (x > 0) x--;
-                break;
-            case "ArrowRight":
-                if (x < selectedCell.parentElement.children.length - 1) x++;
-                break;
-        }
-
-        const newRow = selectedCell.parentElement.parentElement.children[y];
-        if (newRow) {
-            const newCell = newRow.children[x];
-            if (newCell) {
-                this.#selectCell(newCell);
-            }
-        }
+     * Adjusts the size and scale of the canvas element based on the provided scale, width, and height.
+    */
+    styleCanvasSize() {
+        this.element.style.transform = `scale(${this.scale})`;
+        this.element.style.width = `${this.width * cellWidthMult}ch`;
+        this.element.style.height = `${this.height * cellHeightMult}em`;
     }
 
     /**
@@ -172,12 +128,26 @@ export class Canvas {
         if (x < 0 || x >= this.width || y < 0 || y >= this.height) {
             return false;
         }
-
         const cell = this.element.querySelector(`.canvas-cell[data-x="${x}"][data-y="${y}"]`);
         if (cell) {
             cell.textContent = char;
+            this.dispatchCanvasUpdatedEvent();
             return true;
         }
         return false;
+    }
+
+    /**
+     * Dispatches a custom event when the canvas is updated
+     */
+    dispatchCanvasUpdatedEvent() {
+        const event = new CustomEvent("CanvasUpdated", {
+            detail: {
+                canvas: this,
+            },
+            bubbles: true,
+            composed: true,
+        });
+        this.element.dispatchEvent(event);
     }
 }
