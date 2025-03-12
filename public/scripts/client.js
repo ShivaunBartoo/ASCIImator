@@ -28,8 +28,7 @@ async function initializeApp() {
 
             //toggle visibility when button is clicked
             dropdownButton.addEventListener("click", function () {
-                dropdownContent.style.display =
-                    dropdownContent.style.display === "block" ? "none" : "block";
+                dropdownContent.style.display = dropdownContent.style.display === "block" ? "none" : "block";
             });
 
             //if visible and clicked outside, hide

@@ -1,7 +1,7 @@
 import { EditableCanvas } from "./editableCanvas.js";
 
 /**
- * Manages multiple Canvas instances and their interactions
+ * Manages multiple EditableCanvas instances and their interactions
  */
 export class CanvasManager {
     constructor(containerSelector, canvasWidth, canvasHeight) {
