@@ -68,15 +68,28 @@ export class Canvas {
      */
     JSONisValid(json) {
         if (typeof json !== "object" || json === null) {
+            console.error("Invalid JSON: The input is not an object or is null.");
             return false;
         }
         if (typeof json.width !== "number" || json.width <= 0) {
+            console.error("Invalid JSON: 'width' must be a positive number. Received:", json.width);
             return false;
         }
         if (typeof json.height !== "number" || json.height <= 0) {
+            console.error(
+                "Invalid JSON: 'height' must be a positive number. Received:",
+                json.height
+            );
             return false;
         }
-        if (!Array.isArray(json.cells) || json.cells.length !== json.width * json.height) {
+        if (!Array.isArray(json.cells)) {
+            console.error("Invalid JSON: 'cells' must be an array.");
+            return false;
+        }
+        if (json.cells.length !== json.width * json.height) {
+            console.error(
+                `Invalid JSON: 'cells' length (${json.cells.length}) does not match 'width' x 'height' (${json.width} x ${json.height}).`
+            );
             return false;
         }
         return true;
@@ -107,10 +120,9 @@ export class Canvas {
         return html;
     }
 
-
     /**
      * Adjusts the size and scale of the canvas element based on the provided scale, width, and height.
-    */
+     */
     styleCanvasSize() {
         this.element.style.transform = `scale(${this.scale})`;
         this.element.style.width = `${this.width * cellWidthMult}ch`;

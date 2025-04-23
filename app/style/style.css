@@ -32,10 +32,26 @@ nav {
     border-bottom: 2px solid #000000;
     padding: 5px;
     display: flex;
-    justify-content: start;
+    justify-content: left;
     align-items: center;
     gap: 20px;
     background-color: #444444;
+    grid-row: 1;
+}
+
+#left-nav {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    gap: 20px;
+}
+
+#right-nav {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    gap: 20px;
+    margin-right: 20px;
 }
 
 nav span {
@@ -81,48 +97,13 @@ nav span {
     border: none;
 }
 
-.dropdown {
-    position: relative;
-    text-align: center;
-    margin: 0;
-}
-
-.dropdown-button {
+.nav-button {
     background-color: #444444;
     color: #ffffff;
     border: none;
     cursor: pointer;
     font-family: Inconsolata;
     font-size: 16px;
-}
-
-.dropdown-content {
-    position: absolute;
-    background-color: #f9f9f9;
-    border: 2px solid #000000;
-    min-width: 160px;
-    z-index: 1;
-    display: none;
-    padding: 5px;
-}
-
-.dropdown-content button {
-    text-align: start;
-    width: 100%;
-    border: none;
-    display: block;
-    color: black;
-    text-decoration: none;
-    padding-top: 5px;
-    padding-bottom: 5px;
-}
-
-.dropdown-content button:hover {
-    background-color: #ddd;
-}
-
-.dropdown:hover .dropdown-content {
-    display: block;
 }
 
 #anim-canvas-container {
@@ -190,7 +171,7 @@ table.canvas {
 }
 
 .canvas-controls {
-    border: 1px solid #000000;
+    border: 1.5px solid #000000;
     border-top: none;
     display: flex;
     justify-content: center;
@@ -238,4 +219,37 @@ button:active {
 
 .canvas-cell.selected {
     animation: blink 1s steps(1, start) infinite;
+}
+
+#too-small-container {
+    height: 0;
+    display: none;
+}
+
+.popup-dialogue {
+    visibility: hidden;
+    position: absolute;
+    width: 25%;
+    height: 15%;
+
+    z-index: 1;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    background-color: white;
+    border: 2px solid black;
+    gap: 20px;
+
+    padding: 10px;
+}
+
+.dialogue-button-row {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
 }

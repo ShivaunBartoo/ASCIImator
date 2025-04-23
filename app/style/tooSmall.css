@@ -1,0 +1,30 @@
+@media (max-width: 500px), (max-height: 750px) {
+    .dropdown {
+        display: none;
+    }
+
+    .range-container {
+        display: none;
+    }
+
+    #anim-canvas-container {
+        display: none;
+    }
+    #canvases-container {
+        display: none;
+    }
+
+    #too-small-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 20px;
+    }
+
+    #too-small-message {
+        text-align: center;
+        font-size: 0.5em;
+        padding: 20px;
+    }
+}

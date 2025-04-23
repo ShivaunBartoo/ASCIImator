@@ -5,49 +5,52 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>ASCIImator</title>
         <!-- CSS -->
-        <link rel="stylesheet" href="/style/style.css" />
+        <link rel="stylesheet" href="../style/style.css" />
+        <link rel="stylesheet" href="../style/tooSmall.css" />
         <!-- JS -->
-        <script type="module" src="./scripts/client.js"></script>
+        <script type="module" src="../scripts/client.js"></script>
         <!-- FONTS -->
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link
             href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&family=Inconsolata:wght@200..900&family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&display=swap"
-            rel="stylesheet"
-        />
+            rel="stylesheet" />
     </head>
     <body>
         <main>
+            <!-- MAIN NAVIGATION BAR -->
             <nav>
                 <span>ASCIImator</span>
-                <div class="dropdown">
-                    <button class="dropdown-button">Save</button>
-                    <div id="save-content" class="dropdown-content">
-                        <button class="save-to-server">To Server</button>
-                        <!-- <button class="save-to-disk">To Disk</button> -->
-                    </div>
-                </div>
-                <div class="dropdown">
-                    <button class="dropdown-button">Load</button>
-                    <div id="load-content" class="dropdown-content">
-                        <!-- <button class="load-from-server">From Server</button> -->
-                        <!-- <button class="load-from-disk">From Disk</button> -->
-                    </div>
-                </div>
+                <button class="nav-button" id="open-gallery">Gallery</button>
+                <button class="nav-button" id="clear-animation">Clear</button>
+                <button class="nav-button" id="save-to-disk">Save</button>
+                <button class="nav-button" id="load-from-disk">Load</button>
+
                 <div class="range-container">
                     <label for="fps">FPS:</label>
                     <input id="fps" name="fps" type="range" min="1" max="48" value="6" />
                     <span id="fps-value"></span>
                 </div>
             </nav>
+            <div class="popup-dialogue" id="confirmation-dialogue">
+                <div id="confirmation-message">
+                </div>
+                <div class="dialogue-button-row">
+                    <button class="dialogue-button" id="cancel">Cancel</button>
+                    <button class="dialogue-button" id="confirm">Confirm</button>
+                </div>
+            </div>
             <div id="anim-canvas-container">
                 <div class="canvas" id="anim-canvas"></div>
             </div>
-
             <div id="canvases-container">
                 <div id="canvases"></div>
                 <button class="add-button"><span class="material-icons">add</span></button>
+            </div>
+            <div id="too-small-container">
+                <div class="canvas" id="too-small-canvas"></div>
+                <div class="too-small-message">This app is not mobile-friendly.</div>
             </div>
         </main>
     </body>

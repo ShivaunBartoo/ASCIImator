@@ -23,6 +23,42 @@ export class AnimCanvas extends Canvas {
         this.intervalId = null;
     }
 
+    toJSON() {
+        return { fps: this.fps, frames: this.#frames };
+    }
+
+    /**
+     * Sets the JSON data for the animation.
+     * @param {Object} json - JSON object containing animation data.
+     * @throws {Error} If the JSON format is invalid.
+     */
+    fromJSON(json) {
+        if (!this.JSONanimationIsValid(json)) {
+            throw new Error("Invalid JSON format");
+        }
+        this.fps = json.fps;
+        this.#frames = json.frames;
+        this.currentFrameIndex = 0;
+        this.play();
+    }
+
+    async fromFile(file) {
+        try {
+            const response = await fetch(file);
+            if (!response.ok) {
+                throw new Error(`Failed to fetch file: ${response.status}`);
+            }
+            const json = await response.json();
+            if (this.JSONanimationIsValid(json)) {
+                this.fromJSON(json);
+            } else {
+                throw new Error("Invalid file.");
+            }
+        } catch (error) {
+            console.error("Error loading file:", error);
+        }
+    }
+
     /**
      * Sets the current frame to the specified index.
      * @param {number} index - The index of the frame to set.
@@ -30,7 +66,7 @@ export class AnimCanvas extends Canvas {
     setFrame(index) {
         if (index >= 0 && index < this.#frames.length) {
             this.currentFrameIndex = index;
-            this.fromJSON(this.#frames[index]);
+            super.fromJSON(this.#frames[index]);
         }
     }
 
@@ -45,6 +81,33 @@ export class AnimCanvas extends Canvas {
     }
 
     /**
+     * Validates the structure of a JSON object for the animation.
+     * @param {Object} json - JSON object to validate.
+     * @returns {boolean} True if the JSON object is valid, false otherwise.
+     */
+    JSONanimationIsValid(json) {
+        if (typeof json !== "object" || json === null) {
+            console.error("Invalid JSON: Expected an object.");
+            return false;
+        }
+        if (typeof json.fps !== "string" || isNaN(Number(json.fps)) || Number(json.fps) <= 0) {
+            console.error("Invalid JSON: 'fps' should be a positive number.");
+            return false;
+        }
+        if (!Array.isArray(json.frames)) {
+            console.error("Invalid JSON: 'frames' should be an array.");
+            return false;
+        }
+        for (let frame of json.frames) {
+            if (!super.JSONisValid(frame)) {
+                console.error("Invalid JSON: One or more frames are invalid.");
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
      * Sets the frames for the animation.
      * @param {Array<object>} frames - An array of frame data.
      * @throws {Error} If frames is not an array or if a frame is invalid.
@@ -54,7 +117,7 @@ export class AnimCanvas extends Canvas {
             throw new Error("Frames should be an array");
         }
         for (const frame of frames) {
-            if (!this.JSONisValid(frame)) {
+            if (!super.JSONisValid(frame)) {
                 throw new Error("Invalid frame format");
             }
         }

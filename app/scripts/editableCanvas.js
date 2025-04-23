@@ -62,7 +62,7 @@ export class EditableCanvas extends Canvas {
      * @param {Event} event - The keydown event
      */
     handleKeyDown(event) {
-        if (event.key.length === 1) {
+        if (event.key && event.key.length === 1) {
             if (selectedCell) {
                 selectedCell.textContent = event.key;
                 this.dispatchCanvasUpdatedEvent();
@@ -74,11 +74,14 @@ export class EditableCanvas extends Canvas {
             event.key === "ArrowLeft" ||
             event.key === "ArrowRight"
         ) {
+            event.preventDefault();
             this.moveSelection(event.key);
         }
         if (event.key === "Backspace") {
-            selectedCell.textContent = " ";
-            this.dispatchCanvasUpdatedEvent();
+            if (selectedCell) {
+                selectedCell.textContent = " ";
+                this.dispatchCanvasUpdatedEvent();
+            }
         }
     }
 

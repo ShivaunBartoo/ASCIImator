@@ -27,7 +27,7 @@ export class CanvasManager {
      */
     async addCanvas(count) {
         // Fetch the HTML template for the editable canvas
-        return fetch("/html/editableCanvas.html")
+        return fetch("../html/editableCanvas.html")
             .then((response) => response.text())
             .then((html) => {
                 // Create a template element to hold the fetched HTML
@@ -42,12 +42,7 @@ export class CanvasManager {
                     this.container.appendChild(canvasContainer);
 
                     let canvasElement = canvasContainer.querySelector(".canvas");
-                    let newCanvas = new EditableCanvas(
-                        canvasElement,
-                        this.canvasWidth,
-                        this.canvasHeight,
-                        1
-                    );
+                    let newCanvas = new EditableCanvas(canvasElement, this.canvasWidth, this.canvasHeight, 1);
                     this.canvases.push(newCanvas);
                     newCanvases.push(newCanvas);
                     newCanvas.dispatchCanvasUpdatedEvent();
@@ -98,10 +93,9 @@ export class CanvasManager {
         }
     }
 
-
     /**
      * Retrieves the animation frames from the canvases.
-     * 
+     *
      * @returns {Array<Object>} An array of JSON representations of the canvases.
      */
     getFrames() {
@@ -123,9 +117,7 @@ export class CanvasManager {
      * @returns {EditableCanvas|undefined} Canvas instance if found
      */
     getEventCanvas(event) {
-        return this.getElementCanvas(
-            event.target.closest(".canvas-container").querySelector(".canvas")
-        );
+        return this.getElementCanvas(event.target.closest(".canvas-container").querySelector(".canvas"));
     }
 
     /**
