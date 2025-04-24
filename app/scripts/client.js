@@ -1,5 +1,6 @@
 import { CanvasManager } from "./canvasManager.js";
 import { AnimCanvas } from "./animCanvas.js";
+import { EditableCanvas } from "./editableCanvas.js";
 
 const canvasManager = new CanvasManager("#canvases", 12, 8);
 const animCanvasElement = document.querySelector("#anim-canvas");
@@ -89,18 +90,34 @@ function setupClickHandlers() {
 function setupConfirmationDialogue() {
     let dialogue = document.querySelector("#confirmation-dialogue");
     if (dialogue) {
-        dialogue.addEventListener("click", (event) => {
-            if (event.target.closest("#cancel")) {
-                dialogue.style.visibility = "";
+        let confirm = () => {
+            dialogue.style.visibility = "";
+            if (typeof dialogue._action === "function") {
+                dialogue._action();
+                dialogue._action = null;
             }
-            if (event.target.closest("#confirm")) {
-                dialogue.style.visibility = "";
-                if (typeof dialogue._action === "function") {
-                    dialogue._action();
-                    dialogue._action = null;
+        };
+        if (dialogue) {
+            dialogue.addEventListener("click", (event) => {
+                if (event.target.closest("#cancel")) {
+                    dialogue.style.visibility = "";
                 }
-            }
-        });
+                if (event.target.closest("#confirm")) {
+                    confirm();
+                }
+            });
+            dialogue.addEventListener("keydown", (event) => {
+                console.log(event.key);
+                if (event.key === "Escape") {
+                    dialogue.style.visibility = "";
+                }
+                if (event.key === "Enter") {
+                    confirm();
+                }
+            });
+        }
+    } else {
+        console.error("Confirmation dialogue element not found in the DOM.");
     }
 }
 
@@ -124,6 +141,7 @@ async function handleOpenGallery() {
  */
 function handleAddButtonClick() {
     canvasManager.addCanvas(1);
+    animCanvas.setFrames(canvasManager.getFrames());
 }
 
 /**
@@ -135,6 +153,7 @@ function handleDeleteButtonClick(event) {
     let canvas = canvasManager.getEventCanvas(event);
     if (canvas) {
         canvasManager.deleteCanvas(canvas);
+        animCanvas.setFrames(canvasManager.getFrames());
     } else {
         console.error("Canvas instance not found for element");
     }
@@ -279,13 +298,12 @@ export async function loadAnimation(data) {
     } else if (length < canvasManager.canvases.length) {
         let difference = canvasManager.canvases.length - length;
         for (let i = 0; i < difference; i++) {
-            canvasManager.deleteCanvas(canvasManager.canvases[0]);
+            canvasManager.deleteCanvas(canvasManager.canvases[canvasManager.canvases.length - 1]);
         }
     }
     canvasManager.canvases.forEach((canvas, index) => {
         if (frames[index]) {
             canvas.fromJSON(frames[index]);
-            canvas.dispatchCanvasUpdatedEvent();
         }
     });
     animCanvas.setFrames(canvasManager.getFrames());
@@ -356,6 +374,8 @@ function confirmAction(message, action) {
         dialogue.querySelector("#confirmation-message").innerHTML = message;
         dialogue._action = action;
         dialogue.style.visibility = "visible";
+        dialogue.tabIndex = -1;
+        dialogue.focus();
     } else {
         console.error("Dialogue not found");
     }

@@ -24,7 +24,7 @@ export class AnimCanvas extends Canvas {
     }
 
     toJSON() {
-        return { fps: this.fps, frames: this.#frames };
+        return { fps: Number(this.fps), frames: this.#frames };
     }
 
     /**
@@ -90,7 +90,7 @@ export class AnimCanvas extends Canvas {
             console.error("Invalid JSON: Expected an object.");
             return false;
         }
-        if (typeof json.fps !== "string" || isNaN(Number(json.fps)) || Number(json.fps) <= 0) {
+        if (isNaN(Number(json.fps)) || Number(json.fps) <= 0) {
             console.error("Invalid JSON: 'fps' should be a positive number.");
             return false;
         }

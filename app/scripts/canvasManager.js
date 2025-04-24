@@ -42,7 +42,12 @@ export class CanvasManager {
                     this.container.appendChild(canvasContainer);
 
                     let canvasElement = canvasContainer.querySelector(".canvas");
-                    let newCanvas = new EditableCanvas(canvasElement, this.canvasWidth, this.canvasHeight, 1);
+                    let newCanvas = new EditableCanvas(
+                        canvasElement,
+                        this.canvasWidth,
+                        this.canvasHeight,
+                        1
+                    );
                     this.canvases.push(newCanvas);
                     newCanvases.push(newCanvas);
                     newCanvas.dispatchCanvasUpdatedEvent();
@@ -69,10 +74,9 @@ export class CanvasManager {
                     this.canvases.splice(index, 1);
                 }
                 canvas.element.closest(".canvas-container").remove();
-                canvas.dispatchCanvasUpdatedEvent();
-                this.updateNavigationButtons();
             }
         }
+        this.updateNavigationButtons();
     }
 
     /**
@@ -117,7 +121,9 @@ export class CanvasManager {
      * @returns {EditableCanvas|undefined} Canvas instance if found
      */
     getEventCanvas(event) {
-        return this.getElementCanvas(event.target.closest(".canvas-container").querySelector(".canvas"));
+        return this.getElementCanvas(
+            event.target.closest(".canvas-container").querySelector(".canvas")
+        );
     }
 
     /**

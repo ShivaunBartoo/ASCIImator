@@ -1,6 +1,7 @@
 import { Canvas } from "./canvas.js";
 
 let selectedCell = null; // Static variable to store the currently selected cell
+let selectedCanvas = null; // Track which canvas owns the selected cell
 let globalListenersAdded = false; // Flag to track if global event listeners have been added
 
 /**
@@ -27,17 +28,19 @@ export class EditableCanvas extends Canvas {
                 // Prevent the click event from bubbling up to the document
                 event.stopPropagation();
                 this.selectCell(cell);
+                selectedCanvas = this; // Track which canvas owns the selected cell
             });
         });
 
         if (!globalListenersAdded) {
-            // Add event listener for keydown events
-            document.addEventListener("keydown", this.handleKeyDown.bind(this));
+            // Add document-level handler that doesn't bind to any specific canvas
+            document.addEventListener("keydown", handleKeyDown);
             // Add event listener for clicks outside the canvas to deselect the current cell
             document.addEventListener("click", (event) => {
                 if (selectedCell) {
                     selectedCell.classList.remove("selected");
                     selectedCell = null;
+                    selectedCanvas = null;
                 }
             });
             // Set the flag to true to indicate that global listeners have been added
@@ -55,34 +58,6 @@ export class EditableCanvas extends Canvas {
         }
         selectedCell = cell;
         selectedCell.classList.add("selected");
-    }
-
-    /**
-     * Handles keydown events to update the content of the selected cell
-     * @param {Event} event - The keydown event
-     */
-    handleKeyDown(event) {
-        if (event.key && event.key.length === 1) {
-            if (selectedCell) {
-                selectedCell.textContent = event.key;
-                this.dispatchCanvasUpdatedEvent();
-            }
-        }
-        if (
-            event.key === "ArrowUp" ||
-            event.key === "ArrowDown" ||
-            event.key === "ArrowLeft" ||
-            event.key === "ArrowRight"
-        ) {
-            event.preventDefault();
-            this.moveSelection(event.key);
-        }
-        if (event.key === "Backspace") {
-            if (selectedCell) {
-                selectedCell.textContent = " ";
-                this.dispatchCanvasUpdatedEvent();
-            }
-        }
     }
 
     /**
@@ -117,5 +92,26 @@ export class EditableCanvas extends Canvas {
                 this.selectCell(newCell);
             }
         }
+    }
+}
+
+// Document-level handler that uses the selectedCanvas reference
+function handleKeyDown(event) {
+    if (!selectedCell || !selectedCanvas) return;
+
+    if (event.key && event.key.length === 1) {
+        selectedCell.textContent = event.key;
+        selectedCanvas.dispatchCanvasUpdatedEvent();
+    } else if (
+        event.key === "ArrowUp" ||
+        event.key === "ArrowDown" ||
+        event.key === "ArrowLeft" ||
+        event.key === "ArrowRight"
+    ) {
+        event.preventDefault();
+        selectedCanvas.moveSelection(event.key);
+    } else if (event.key === "Backspace") {
+        selectedCell.textContent = " ";
+        selectedCanvas.dispatchCanvasUpdatedEvent();
     }
 }
