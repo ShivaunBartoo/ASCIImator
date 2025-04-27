@@ -135,7 +135,6 @@ function setupConfirmationDialogue() {
                 }
             });
             dialogue.addEventListener("keydown", (event) => {
-                console.log(event.key);
                 if (event.key === "Escape") {
                     dialogue.style.visibility = "";
                 }
@@ -324,7 +323,6 @@ function handleLoadFromDisk() {
  * @returns {void}
  */
 function handleSaveToDisk() {
-    console.log("Save to Disk clicked");
     const data = animCanvas.toJSON();
     const blob = new Blob([JSON.stringify(data)], { type: "application/json" });
 
@@ -352,7 +350,7 @@ function handleSaveToDisk() {
  */
 function handleClearAnimation() {
     let clearAnimation = async () => {
-        await loadAnimationFromFile("../json/empty.json");
+        await loadAnimationFromFile("assets/json/empty.json");
         unsavedChanges = false;
     };
     if (unsavedChanges) {

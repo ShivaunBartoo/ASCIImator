@@ -4,6 +4,7 @@ const canvasWidth = 12;
 const canvasHeight = 8;
 
 loadContent();
+setHomeLink();
 
 /**
  * Asynchronously loads animation content and dynamically populates the animation card container.
@@ -50,8 +51,19 @@ async function loadContent() {
 
                 card.querySelector(".load-button").addEventListener("click", () => {
                     localStorage.setItem("pendingAnimation", JSON.stringify(animation));
-                    window.location.href = "/ASCIImator/";
+                    window.location.href = getRootLink();
                 });
             }
         });
+}
+
+function getRootLink() {
+    return window.location.pathname.includes("ASCIImator")
+        ? "/ASCIImator/index.html"
+        : "/index.html";
+}
+
+function setHomeLink() {
+    let element = document.querySelector("#home-link");
+    element.setAttribute("href", getRootLink());
 }
