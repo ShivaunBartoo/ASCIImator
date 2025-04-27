@@ -16,45 +16,50 @@ ASCIImator is a web-based ASCII animation editor that allows users to create, ed
 
 ```
 ASCIImator/
-├── .gitignore
+├── index.html
+├── assets/
+│   ├── html/
+│   │   ├── animationCard.html
+│   │   ├── editableCanvas.html
+│   │   └── gallery.html
+│   ├── scripts/
+│   │   ├── animCanvas.js
+│   │   ├── canvas.js
+│   │   ├── canvasManager.js
+│   │   ├── client.js
+│   │   ├── editableCanvas.js
+│   │   ├── gallery.js
+│   │   └── gif.worker.js
+│   ├── styles/
+│   │   ├── style-gallery.css
+│   │   ├── style.css
+│   │   └── tooSmall.css
+│   └── json/
+│       ├── animation.json
+│       ├── bouncing_ball.json
+│       ├── bouncing_ball_24.json
+│       ├── empty.json
+│       ├── gallery_files.json
+│       ├── sleepy_cat.json
+│       ├── snake.json
+│       └── super_ball.json
 ├── README.md
-└── app/
-    ├── html/
-    │   ├── animationCard.html
-    │   ├── editableCanvas.html
-    │   ├── gallery.html
-    │   └── index.html
-    ├── json/
-    │   ├── empty.json
-    │   ├── gallery_files.json
-    │   └── ..other .json animation files
-    ├── scripts/
-    │   ├── animCanvas.js
-    │   ├── canvas.js
-    │   ├── canvasManager.js
-    │   ├── client.js
-    │   ├── editableCanvas.js
-    │   ├── gallery.js
-    │   └── gif.worker.js
-    └── style/
-        ├── style-gallery.css
-        ├── style.css
-        └── tooSmall.css
+└── todo.txt
 ```
 ### Usage
 
-- Open `app/html/index.html` in your browser via your local server.
+- Open `index.html` in your browser (served from the project root).
 - Use the editor to create and preview ASCII animations.
 - Save your work as JSON or export as GIF.
 - Browse the gallery for inspiration or to load sample animations.
 
 ## Scripts Overview
 
-- [`app/scripts/client.js`](app/scripts/client.js): Main application logic and UI event handling.
-- [`app/scripts/canvasManager.js`](app/scripts/canvasManager.js): Manages multiple editable canvases (frames).
-- [`app/scripts/editableCanvas.js`](app/scripts/editableCanvas.js): Interactive canvas for editing ASCII art.
-- [`app/scripts/animCanvas.js`](app/scripts/animCanvas.js): Animation preview and playback logic.
-- [`app/scripts/gallery.js`](app/scripts/gallery.js): Gallery page logic.
+- [`assets/scripts/client.js`](assets/scripts/client.js): Main application logic and UI event handling.
+- [`assets/scripts/canvasManager.js`](assets/scripts/canvasManager.js): Manages multiple editable canvases (frames).
+- [`assets/scripts/editableCanvas.js`](assets/scripts/editableCanvas.js): Interactive canvas for editing ASCII art.
+- [`assets/scripts/animCanvas.js`](assets/scripts/animCanvas.js): Animation preview and playback logic.
+- [`assets/scripts/gallery.js`](assets/scripts/gallery.js): Gallery page logic.
 
 ## Dependencies
 

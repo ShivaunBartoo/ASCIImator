@@ -5,7 +5,7 @@ const canvasManager = new CanvasManager("#canvases", 12, 8);
 const animCanvasElement = document.querySelector("#anim-canvas");
 const tooSmallCanvasElement = document.querySelector("#too-small-canvas");
 const tooSmallCanvas = new AnimCanvas(tooSmallCanvasElement, 12, 8, 1, [{}], 6);
-const tooSmallAnimation = `../json/sleepy_cat.json`;
+const tooSmallAnimation = `assets/json/sleepy_cat.json`;
 const animCanvas = new AnimCanvas(animCanvasElement, 12, 8, 2, [{}], 6);
 let unsavedChanges = false;
 
@@ -166,9 +166,9 @@ async function handleOpenGallery() {
     if (unsavedChanges) {
         const message = `Are you sure you want to leave this page? 
         All usaved changes will be lost.`;
-        confirmAction(message, () => (window.location.href = `./gallery.html`));
+        confirmAction(message, () => (window.location.href = `assets/html/gallery.html`));
     } else {
-        window.location.href = `./gallery.html`;
+        window.location.href = `assets/html/gallery.html`;
     }
 }
 
@@ -390,7 +390,7 @@ async function handleSaveGif() {
     var gif = new window.GIF({
         workers: 2,
         quality: 10,
-        workerScript: "../scripts/gif.worker.js",
+        workerScript: "assets/scripts/gif.worker.js",
     });
 
     const delay = 1000 / animCanvas.fps;

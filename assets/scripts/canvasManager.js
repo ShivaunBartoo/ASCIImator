@@ -27,7 +27,7 @@ export class CanvasManager {
      */
     async addCanvas(count) {
         // Fetch the HTML template for the editable canvas
-        return fetch("../html/editableCanvas.html")
+        return fetch("assets/html/editableCanvas.html")
             .then((response) => response.text())
             .then((html) => {
                 // Create a template element to hold the fetched HTML
