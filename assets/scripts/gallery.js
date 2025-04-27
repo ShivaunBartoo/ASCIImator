@@ -50,7 +50,7 @@ async function loadContent() {
 
                 card.querySelector(".load-button").addEventListener("click", () => {
                     localStorage.setItem("pendingAnimation", JSON.stringify(animation));
-                    window.location.href = "/index.html";
+                    window.location.href = "/ASCIImator/";
                 });
             }
         });
