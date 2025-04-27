@@ -49,7 +49,7 @@ export class EditableCanvas extends Canvas {
     }
 
     /**
-     * Selects a canvas cell and updates the selectedCell variable
+     * @description Selects a canvas cell and updates the selectedCell variable
      * @param {Element} cell - The cell element to select
      */
     selectCell(cell) {
@@ -95,7 +95,15 @@ export class EditableCanvas extends Canvas {
     }
 }
 
-// Document-level handler that uses the selectedCanvas reference
+/**
+ * This function processes keydown events to update the content of the selected cell
+ * or move the selection within the canvas. It supports the following actions:
+ * - Updates the selected cell's content if a printable character key is pressed.
+ * - Moves the selection within the canvas when arrow keys are pressed.
+ * - Clears the content of the selected cell when the Backspace key is pressed.
+ *
+ * @param {KeyboardEvent} event - The keyboard event triggered by the user.
+ */
 function handleKeyDown(event) {
     if (!selectedCell || !selectedCanvas) return;
 

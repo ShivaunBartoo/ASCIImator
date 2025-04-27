@@ -23,6 +23,10 @@ export class AnimCanvas extends Canvas {
         this.intervalId = null;
     }
 
+    /**
+     * Returns a JSON representation of the animation
+     * @returns {void}
+     */
     toJSON() {
         return { fps: Number(this.fps), frames: this.#frames };
     }
@@ -42,6 +46,13 @@ export class AnimCanvas extends Canvas {
         this.play();
     }
 
+
+    /**
+     * Loads animation data from a JSON file and applies it to the current instance.
+     * 
+     * @async
+     * @param {string} file - The path or URL of the JSON file to load.
+     */
     async fromFile(file) {
         try {
             const response = await fetch(file);

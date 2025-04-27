@@ -11,6 +11,10 @@ let unsavedChanges = false;
 
 initializeApp();
 
+/**
+ * Initializes the application.
+ * @returns {Promise<void>}
+ */
 async function initializeApp() {
     setupCanvasUpdates();
     setupFPSControls();
@@ -22,6 +26,11 @@ async function initializeApp() {
     unsavedChanges = false;
 }
 
+/**
+ * Loads any pending animation from localStorage and removes it after loading.
+ * Used to pass animation data from the gallery page to the main page.
+ * @returns {Promise<void>}
+ */
 async function loadPendingAnimation() {
     const pendingAnimation = localStorage.getItem("pendingAnimation");
     if (pendingAnimation) {
@@ -36,6 +45,11 @@ async function loadPendingAnimation() {
     }
 }
 
+/**
+ * Sets up the event listener for CanvasUpdated events.
+ * Keeps the animCanvas in sync with the EditableCanvases managed by the canvasManager.
+ * @returns {void}
+ */
 function setupCanvasUpdates() {
     document.addEventListener("CanvasUpdated", (event) => {
         if (event.detail.canvas !== animCanvas && event.detail.canvas !== tooSmallCanvas) {
@@ -50,6 +64,10 @@ function setupCanvasUpdates() {
     });
 }
 
+/**
+ * Sets up the FPS input controls.
+ * @returns {void}
+ */
 function setupFPSControls() {
     const fpsInput = document.getElementById("fps");
     const fpsValue = document.getElementById("fps-value");
@@ -62,6 +80,10 @@ function setupFPSControls() {
     });
 }
 
+/**
+ * Sets up click handlers for UI buttons.
+ * @returns {void}
+ */
 function setupClickHandlers() {
     document.addEventListener("click", (event) => {
         if (event.target.closest(".add-button")) {
@@ -88,6 +110,11 @@ function setupClickHandlers() {
     });
 }
 
+/**
+ * Sets up the confirmation dialogue for confirming user actions.
+ * Handles confirm/cancel button clicks and keyboard shortcuts (Enter/Escape).
+ * @returns {void}
+ */
 function setupConfirmationDialogue() {
     let dialogue = document.querySelector("#confirmation-dialogue");
     if (dialogue) {
@@ -122,11 +149,19 @@ function setupConfirmationDialogue() {
     }
 }
 
+/**
+ * Initializes the main canvases for the animation editor and starts playback.
+ * @returns {Promise<void>}
+ */
 async function initializeCanvases() {
     await canvasManager.initialize(3);
     animCanvas.play();
 }
 
+/**
+ * Handles navigation to the gallery page, prompting the user if there are unsaved changes.
+ * @returns {Promise<void>}
+ */
 async function handleOpenGallery() {
     if (unsavedChanges) {
         const message = `Are you sure you want to leave this page? 
@@ -138,7 +173,8 @@ async function handleOpenGallery() {
 }
 
 /**
- * Handles click on add button - creates a new canvas
+ * Handles click on add button - creates a new canvas.
+ * @returns {void}
  */
 function handleAddButtonClick() {
     canvasManager.addCanvas(1);
@@ -146,9 +182,10 @@ function handleAddButtonClick() {
 }
 
 /**
- * Handles click on delete button - removes canvas if found
- * If it's the last canvas, it will be cleared instead of removed
+ * Handles click on delete button - removes canvas if found.
+ * If it's the last canvas, it will be cleared instead of removed.
  * @param {Event} event - Click event from the delete button
+ * @returns {void}
  */
 function handleDeleteButtonClick(event) {
     let canvas = canvasManager.getEventCanvas(event);
@@ -161,10 +198,11 @@ function handleDeleteButtonClick(event) {
 }
 
 /**
- * Handles click on copy button - duplicates canvas content
- * Creates a new canvas and copies the content from the source canvas
- * The new canvas is inserted after the source canvas
+ * Handles click on copy button - duplicates canvas content.
+ * Creates a new canvas and copies the content from the source canvas.
+ * The new canvas is inserted after the source canvas.
  * @param {Event} event - Click event from the copy button
+ * @returns {void}
  */
 function handleCopyButtonClick(event) {
     let canvas = canvasManager.getEventCanvas(event);
@@ -181,10 +219,11 @@ function handleCopyButtonClick(event) {
 }
 
 /**
- * Handles click on move buttons - moves canvas left or right
- * Swaps the content of the canvas with its neighbor in the specified direction
+ * Handles click on move buttons - moves canvas left or right.
+ * Swaps the content of the canvas with its neighbor in the specified direction.
  * @param {Event} event - Click event from the move button
  * @param {number} direction - Direction to move (-1 for left, 1 for right)
+ * @returns {void}
  */
 function handleMoveButtonClick(event, direction) {
     let canvas = canvasManager.getEventCanvas(event);
@@ -196,68 +235,9 @@ function handleMoveButtonClick(event, direction) {
 }
 
 /**
- * Handles click on "Save to Server" menu item
- * Saves the current animation frames and FPS to the server
- */
-async function handleSaveToServer() {
-    const frames = canvasManager.getFrames();
-    const defaultName = "animation";
-    const userName = prompt("Enter the file name:", defaultName) || defaultName;
-    const fileName = `${userName}.json`;
-    const fps = document.getElementById("fps").value;
-
-    const saveData = {
-        fps: fps,
-        frames: frames,
-    };
-
-    try {
-        const response = await fetch(`/save?filename=${fileName}`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(saveData),
-        });
-
-        if (response.ok) {
-            populateLoadDropdown();
-        } else {
-            console.error("Failed to save canvas data to server:", response.status);
-        }
-    } catch (error) {
-        console.error("Error saving canvas data:", error);
-    }
-}
-
-/**
- * Updates the load dropdown with the list of available files from the server
- */
-async function populateLoadDropdown() {
-    try {
-        const response = await fetch("/listfiles");
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const files = await response.json();
-        const loadDropdown = document.querySelector("#load-content");
-        loadDropdown.innerHTML = "";
-
-        files.forEach((file) => {
-            const button = document.createElement("button");
-            button.className = "load-from-server";
-            button.textContent = file;
-            button.addEventListener("click", () => handleLoadFromServer(file)); // Attach click event
-            loadDropdown.appendChild(button);
-        });
-    } catch (error) {
-        console.error("Failed to fetch file list:", error);
-    }
-}
-
-/**
- * Loads the animation frames and FPS from a file
+ * Loads the animation frames and FPS from a file.
  * @param {string} file - The name of the file to load
+ * @returns {Promise<void>}
  */
 async function loadAnimationFromFile(file) {
     if (typeof file !== "string" || file.trim() === "") {
@@ -281,6 +261,12 @@ async function loadAnimationFromFile(file) {
     }
 }
 
+/**
+ * Loads animation data into the canvases and updates the animation preview.
+ * Adds or removes canvases as needed to match the number of frames.
+ * @param {Object} data - Animation data containing frames and fps
+ * @returns {Promise<void>}
+ */
 export async function loadAnimation(data) {
     if (!animCanvas.JSONanimationIsValid(data)) {
         throw new Error("Invalid JSON format");
@@ -312,8 +298,9 @@ export async function loadAnimation(data) {
 }
 
 /**
- * Handles click on "Load from Disk" menu item
- * Placeholder function for loading animation data from disk
+ * Handles click on "Load from Disk" menu item.
+ * Opens a file picker and loads animation data from a selected JSON file.
+ * @returns {void}
  */
 function handleLoadFromDisk() {
     const fileInput = document.createElement("input");
@@ -332,7 +319,9 @@ function handleLoadFromDisk() {
 }
 
 /**
- * Handles click on "Save to Disk" menu item
+ * Handles click on "Save to Disk" menu item.
+ * Saves the current animation as a JSON file with a timestamped filename.
+ * @returns {void}
  */
 function handleSaveToDisk() {
     console.log("Save to Disk clicked");
@@ -357,6 +346,10 @@ function handleSaveToDisk() {
     URL.revokeObjectURL(url);
 }
 
+/**
+ * Handles clearing the current animation, prompting the user if there are unsaved changes.
+ * @returns {void}
+ */
 function handleClearAnimation() {
     let clearAnimation = async () => {
         await loadAnimationFromFile("../json/empty.json");
@@ -369,6 +362,12 @@ function handleClearAnimation() {
     } else clearAnimation();
 }
 
+/**
+ * Shows a confirmation dialogue with a message and an action to perform if confirmed.
+ * @param {string} message - The confirmation message to display
+ * @param {Function} action - The action to perform if confirmed
+ * @returns {void}
+ */
 function confirmAction(message, action) {
     let dialogue = document.querySelector("#confirmation-dialogue");
     if (dialogue) {
@@ -382,14 +381,16 @@ function confirmAction(message, action) {
     }
 }
 
+/**
+ * Handles saving the current animation as a GIF file.
+ * Captures each frame using html2canvas, adds it to gif.js, and triggers a download when finished.
+ * @returns {Promise<void>}
+ */
 async function handleSaveGif() {
-    const width = animCanvasElement.offsetWidth;
-    const height = animCanvasElement.offsetHeight;
-
-    var gif = new GIF({
+    var gif = new window.GIF({
         workers: 2,
         quality: 10,
-        workerScript: "/node_modules/gif.js/dist/gif.worker.js",
+        workerScript: "../scripts/gif.worker.js",
     });
 
     const delay = 1000 / animCanvas.fps;
