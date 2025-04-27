@@ -1,5 +1,5 @@
-@media (max-width: 500px), (max-height: 750px) {
-    .dropdown {
+@media (max-width: 750px), (max-height: 750px) {
+    .nav-button {
         display: none;
     }
 

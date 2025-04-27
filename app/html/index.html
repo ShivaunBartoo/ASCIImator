@@ -8,6 +8,8 @@
         <link rel="stylesheet" href="../style/style.css" />
         <link rel="stylesheet" href="../style/tooSmall.css" />
         <!-- JS -->
+        <script src="/node_modules/html2canvas/dist/html2canvas.min.js"></script>
+        <script src="/node_modules/gif.js/dist/gif.js"></script>
         <script type="module" src="../scripts/client.js"></script>
         <!-- FONTS -->
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
@@ -26,6 +28,7 @@
                 <button class="nav-button" id="clear-animation">Clear</button>
                 <button class="nav-button" id="save-to-disk">Save</button>
                 <button class="nav-button" id="load-from-disk">Load</button>
+                <button class="nav-button" id="save-gif">Download GIF</button>
 
                 <div class="range-container">
                     <label for="fps">FPS:</label>
@@ -34,8 +37,7 @@
                 </div>
             </nav>
             <div class="popup-dialogue" id="confirmation-dialogue">
-                <div id="confirmation-message">
-                </div>
+                <div id="confirmation-message"></div>
                 <div class="dialogue-button-row">
                     <button class="dialogue-button" id="cancel">Cancel</button>
                     <button class="dialogue-button" id="confirm">Confirm</button>

@@ -153,4 +153,8 @@ export class AnimCanvas extends Canvas {
             this.intervalId = null;
         }
     }
+
+    getFrameCount() {
+        return this.#frames.length;
+    }
 }

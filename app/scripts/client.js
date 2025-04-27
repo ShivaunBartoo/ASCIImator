@@ -1,6 +1,5 @@
 import { CanvasManager } from "./canvasManager.js";
 import { AnimCanvas } from "./animCanvas.js";
-import { EditableCanvas } from "./editableCanvas.js";
 
 const canvasManager = new CanvasManager("#canvases", 12, 8);
 const animCanvasElement = document.querySelector("#anim-canvas");
@@ -83,6 +82,8 @@ function setupClickHandlers() {
             handleLoadFromDisk(event);
         } else if (event.target.closest("#clear-animation")) {
             handleClearAnimation();
+        } else if (event.target.closest("#save-gif")) {
+            handleSaveGif();
         }
     });
 }
@@ -379,4 +380,49 @@ function confirmAction(message, action) {
     } else {
         console.error("Dialogue not found");
     }
+}
+
+async function handleSaveGif() {
+    const width = animCanvasElement.offsetWidth;
+    const height = animCanvasElement.offsetHeight;
+
+    var gif = new GIF({
+        workers: 2,
+        quality: 10,
+        workerScript: "/node_modules/gif.js/dist/gif.worker.js",
+    });
+
+    const delay = 1000 / animCanvas.fps;
+
+    animCanvas.stop();
+    animCanvas.setFrame(0);
+    // Collect all html2canvas promises
+    const framePromises = [];
+    for (let i = 0; i < animCanvas.getFrameCount(); i++) {
+        framePromises.push(
+            html2canvas(animCanvasElement)
+                .then((canvas) => {
+                    gif.addFrame(canvas, { delay: delay });
+                })
+                .catch((error) => {})
+        );
+        animCanvas.nextFrame();
+    }
+
+    // Wait for all frames to be added
+    await Promise.all(framePromises);
+
+    gif.on("finished", function (blob) {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "animation.gif";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    });
+
+    gif.render();
+    animCanvas.play();
 }
