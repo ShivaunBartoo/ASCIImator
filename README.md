@@ -2,6 +2,8 @@
 
 ASCIImator is a web-based ASCII animation editor that allows users to create, edit, preview, and export ASCII art animations. 
 
+You can try ASCIImator [here](https://shivaunbartoo.github.io/ASCIImator/)
+
 ## Features
 
 - **Multi-frame ASCII animation editor**: Add, delete, copy, and reorder frames.
@@ -48,7 +50,7 @@ ASCIImator/
 ```
 ### Usage
 
-- Open `index.html` in your browser (served from the project root).
+- Open ASCIImator in your browser: [https://shivaunbartoo.github.io/ASCIImator/](https://shivaunbartoo.github.io/ASCIImator/)
 - Use the editor to create and preview ASCII animations.
 - Save your work as JSON or export as GIF.
 - Browse the gallery for inspiration or to load sample animations.
