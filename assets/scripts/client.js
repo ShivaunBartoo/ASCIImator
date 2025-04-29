@@ -5,6 +5,7 @@ const canvasManager = new CanvasManager("#canvases", 12, 8);
 const animCanvasElement = document.querySelector("#anim-canvas");
 const tooSmallCanvasElement = document.querySelector("#too-small-canvas");
 const tooSmallCanvas = new AnimCanvas(tooSmallCanvasElement, 12, 8, 1, [{}], 6);
+const startingAnimation = `assets/json/super_ball.json`;
 const tooSmallAnimation = `assets/json/sleepy_cat.json`;
 const animCanvas = new AnimCanvas(animCanvasElement, 12, 8, 2, [{}], 6);
 let unsavedChanges = false;
@@ -42,6 +43,8 @@ async function loadPendingAnimation() {
         } catch (error) {
             console.error("Error loading pending animation:", error);
         }
+    } else {
+        loadAnimationFromFile(startingAnimation);
     }
 }
 
